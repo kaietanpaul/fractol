@@ -9,19 +9,24 @@
  * @return Exit status.
  */
 
-void	make_square(void *mlx_ptr, void *win_ptr)
-{
-	int	i = 0;
+void	make_square(void *mlx_ptr, void *win_ptr) {
+	int i = 0;
 	int j = 0;
 
-	int	x = 400;
-	int	y = 400;
-	int	color = 0xFF8001AA;
+	int x = 400;
+	int y = 400;
+	int color = 0xFF69B4;
 
 	while (i < 100)
 	{
-		mlx_pixel_put(mlx_ptr, win_ptr, x, y, color);
-		y--;
+		while (j < 100)
+		{
+			mlx_pixel_put(mlx_ptr, win_ptr, x, y, color);
+			y--;
+			j++;
+		}
+		j = 0;
+		y = 400;
 		x++;
 		i++;
 	}
