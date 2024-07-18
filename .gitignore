@@ -1,0 +1,47 @@
+# Compiled object files
+*.o
+
+# Compiled dynamic libraries
+*.so
+
+# Compiled static libraries
+*.a
+
+# Executable files
+*.out
+*.exe
+
+# Debug files
+*.dSYM/
+*.stackdump
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.old
+
+# Backup files
+*.orig
+*.save
+
+# Minilibx library files
+minilibx-linux/
+
+# Ignore build directories
+build/
+dist/
+
+# Ignore NFS temporary files
+.nfs*
+
+# Ignore compiled program
+fractol
