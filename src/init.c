@@ -15,7 +15,7 @@ void *init_mlx(void **win_ptr)	///< Initialize the MLX and pass pointer to point
 	void	*mlx_ptr;	///< Pointer to mlx
 
 	mlx_ptr = mlx_init();	///< Initialization at the MLX pointer
-	*win_ptr = mlx_new_window(mlx_ptr, 900, 900, "F");	/**< Dereferenced ** to change the actual
+	*win_ptr = mlx_new_window(mlx_ptr, 510, 510, "F");	/**< Dereferenced ** to change the actual
 *	window address from main(). Made graphical window based on initialized connection with MLX */
 
 	return (mlx_ptr);	///Return initialized MLX
