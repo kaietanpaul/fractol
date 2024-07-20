@@ -16,8 +16,9 @@ int	main()
 
     mlx_ptr = init_mlx(&win_ptr);	///< Initialize MLX, create a new window
 
-//	square_full(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a square
+	square_full(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a square
 	square_outline(mlx_ptr, win_ptr);
+	spiral_square(mlx_ptr, win_ptr);
     mlx_loop(mlx_ptr);	///< Start the MLX loop
 
     return (0);
