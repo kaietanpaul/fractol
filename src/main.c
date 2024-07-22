@@ -19,7 +19,8 @@ int	main()
 //	square_full(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a square
 //	square_outline(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a square outline
 	spiral_squary(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a squary spiral
-//	circle_outline(mlx_ptr, win_ptr);
+//	circle_outline(mlx_ptr, win_ptr);	///< Use @fn mlx_pixel_put() to draw a circle outline
+
 
     mlx_loop(mlx_ptr);	///< Start the MLX loop
 

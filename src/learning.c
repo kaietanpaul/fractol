@@ -2,12 +2,12 @@
 
 void	square_full(void *mlx_ptr, void *win_ptr)
 {
-	int i = 0; ///< Loop index for rows
-	int j = 0; ///< Loop index for columns
+	int i = 0;	///< Loop index for rows
+	int j = 0;	///< Loop index for columns
 
 	int x = 200;	///< X-coordinate
 	int y = 200;	///< Y-coordinate
-	int color = 0xFF69B4;
+	int color = 0xFF69B4;	///< Pink color
 
 	while (i < 100)	///< Move horizontal line drawing up
 	{
@@ -39,6 +39,44 @@ void	square_outline(void *mlx_ptr, void *win_ptr)
 	}
 }
 
+void	make_line(void *mlx_ptr, void *win_ptr, int line_len, int x, int y, int direction, int color)
+{
+	int i = 0;
+
+	if (direction == 0)	///< Horizontal from left to right
+	{
+		while (i <= line_len)
+		{
+			mlx_pixel_put(mlx_ptr, win_ptr, x + i, y, color);
+			i++;
+		}
+	}
+	else if (direction == 1)	///< Vertical from top to bottom
+	{
+		while (i < line_len)
+		{
+			mlx_pixel_put(mlx_ptr, win_ptr, x, y + i, color);
+			i++;
+		}
+	}
+	else if (direction == 2)	///< Horizontal from right to left
+	{
+		while (i < line_len)
+		{
+			mlx_pixel_put(mlx_ptr, win_ptr, x - i, y, color);
+			i++;
+		}
+	}
+	else if (direction == 3)	///< Vertical from bottom to top
+	{
+		while (i <= line_len)
+		{
+			mlx_pixel_put(mlx_ptr, win_ptr, x, y - i, color);
+			i++;
+		}
+	}
+}
+
 void	spiral_squary(void *mlx_ptr, void *win_ptr)
 {
 	int	i = 1;
@@ -50,16 +88,16 @@ void	spiral_squary(void *mlx_ptr, void *win_ptr)
 	while (i < 100)	///< Change direction x100
 	{
 		while (j++ <= i)
-			mlx_pixel_put(mlx_ptr, win_ptr, x += i, y, color);
+			make_line(mlx_ptr, win_ptr, i, x += i, y, 2, color);
 		j = 0;
 		while (j++ <= i)
-			mlx_pixel_put(mlx_ptr, win_ptr, x, y += (i + 1), color);
+			make_line(mlx_ptr, win_ptr, i, x, y += (i + 1), 3, color);
 		j = 0;
 		while (j++ <= i)
-			mlx_pixel_put(mlx_ptr, win_ptr, x -= (i + 2), y , color);
+			make_line(mlx_ptr, win_ptr, i, x -= (i + 2), y, 0, color);
 		j = 0;
 		while (j++ <= i)
-			mlx_pixel_put(mlx_ptr, win_ptr, x, y -= (i + 3), color);
+			make_line(mlx_ptr, win_ptr, i, x, y -= (i + 3), 1, color);
 		j = 0;
 		i += 2;
 	}
