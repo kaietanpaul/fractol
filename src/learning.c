@@ -38,37 +38,42 @@ void	square_outline(void *mlx_ptr, void *win_ptr)
 		i++;
 	}
 }
-void	spiral_square(void *mlx_ptr, void *win_ptr)
-{
-	int	i = 0;
-	int	i_x = 0;
-	int	i_y = 0;
-	int	moved_right_up = 1;
-	int	moved_left_down = 0;
 
+void	spiral_squary(void *mlx_ptr, void *win_ptr)
+{
+	int	i = 1;
+	int	j = 0;
 	int x = 250;	///< X-coordinate
 	int y = 250;	///< Y-coordinate
 	int color = 0xFF69B4;
 
-	while (i < 100)	///< Change i 100x
+	while (i < 100)	///< Change direction x100
 	{
-		if (moved_right_up)
-		{
-			moved_right_up = 0;
-			moved_left_down = 1;
-			while (i_x < i)	///< Put pixel on Xy until @param i
-			{
-				x += i_x;
-				mlx_pixel_put(mlx_ptr, win_ptr, x, y, color);
-				i_x++;
-			}
-		}
-		if (moved_left_down)
-		{
-			moved_left_down = 0;
-			moved_right_up = 1;
-			
-		}
+		while (j++ <= i)
+			mlx_pixel_put(mlx_ptr, win_ptr, x += i, y, color);
+		j = 0;
+		while (j++ <= i)
+			mlx_pixel_put(mlx_ptr, win_ptr, x, y += (i + 1), color);
+		j = 0;
+		while (j++ <= i)
+			mlx_pixel_put(mlx_ptr, win_ptr, x -= (i + 2), y , color);
+		j = 0;
+		while (j++ <= i)
+			mlx_pixel_put(mlx_ptr, win_ptr, x, y -= (i + 3), color);
+		j = 0;
+		i += 2;
+	}
+}
+
+void	circle_outline(void *mlx_ptr, void *win_ptr)
+{
+	int	i = 0;
+	int x = 250;	///< X-coordinate
+	int y = 250;	///< Y-coordinate
+	int color = 0xFF69B4;
+
+	while (i < 100)
+	{
 
 		i++;
 	}
