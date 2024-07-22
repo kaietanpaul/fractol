@@ -7,6 +7,21 @@
 # include <stdio.h>	///< Will use it for bugs search
 # include <unistd.h>	///< Will use it for bugs search
 
+typedef struct s_data
+{
+	void	*mlx_ptr;	///< MLX instance ptr
+	void	*win_ptr;	///< Window instance ptr
+}	t_data;
+
+typedef struct s_image
+{
+	void	*img_ptr;	///< Image instance ptr
+	char	*addr;	///< Address of the image
+	int		bits_per_pixel;	///< Bits per pixel
+	int		size_line;	///< Size of the line
+	int		endian;	///< Endian
+}	t_image;
+
 
 	/// Main functions
 void	*init_mlx(void **);	///< Initialize the MLX and pass pointer to pointer of the window address from main()
