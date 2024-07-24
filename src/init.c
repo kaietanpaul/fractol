@@ -10,13 +10,26 @@
  * @return A pointer to the initialized MLX instance.
  */
 
-void *init_mlx(void **win_ptr)	///< Initialize the MLX and pass pointer to pointer of the window address from main()
-{
-	void	*mlx_ptr;	///< Pointer to mlx
 
-	mlx_ptr = mlx_init();	///< Initialization at the MLX pointer
-	*win_ptr = mlx_new_window(mlx_ptr, 500, 500, "F");	/**< Dereferenced ** to change the actual
-*	window address from main(). Made graphical window based on initialized connection with MLX */
-
-	return (mlx_ptr);	///Return initialized MLX
-}
+//t_data *init_mlx()
+//{
+//    t_data *data = malloc(sizeof(t_data));
+//    if (!data)
+//		return (NULL);
+//
+//    data->mlx_ptr = mlx_init();
+//    if (!data->mlx_ptr)
+//	{
+//		free(data);
+//        return (NULL);
+//    }
+//
+//    data->win_ptr = mlx_new_window(data->mlx_ptr, 500, 500, "Window");
+//    if (!data->win_ptr)
+//	{
+//        free(data);
+//        return (NULL);
+//    }
+//
+//    return (data);
+//}

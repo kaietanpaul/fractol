@@ -9,24 +9,64 @@
  * @return Exit status.
  */
 
-int	main() /// Will use struct s_data
+
+//int main()
+//{
+//    t_data *data;
+//
+//	data = init_mlx();
+//    if (!data)
+//		return (1);	/// Initialization failed
+//
+//    make_line(data->mlx_ptr, data->win_ptr, 100, 200, 200, 0, 0xFF69B4);
+//    mlx_loop(data->mlx_ptr);
+//
+//    return 0;
+//}
+
+typedef struct s_mlx_data	///< Contain basic pointer for the program
 {
-	t_data	data;	///< Data structure
-	t_image	image;	///< Image structure
+	void	*mlx_ptr;
+	struct	s_window		///< Contains pointers for the window and it's successors
+	{
+		void			*win_ptr;
+		struct s_window	*next;
+	}							window;
+}								t_mlx_data;
 
-	data.mlx_ptr = mlx_init();	///< Initialize the MLX
-	data.win_ptr = mlx_new_window(data.mlx_ptr, 500, 500, "F");	///< Create a new window6
-
-	image.img_ptr = mlx_new_image(data.mlx_ptr, 500, 500);	///< Create a new image
-	image.addr = mlx_get_data_addr(image.img_ptr, &image.bits_per_pixel, &image.size_line, &image.endian);	///< Get the image address
-
-	square_full(data.mlx_ptr, data.win_ptr);	///< Draw a filled square FIXME: Do not work standalone | FIXME: Combine with image not data structure
-	square_outline(data.mlx_ptr, data.win_ptr);	///< Draw a square outline FIXME: Do not work standalone | FIXME: Combine with image not data structure
-	spiral_squary(data.mlx_ptr, data.win_ptr);	///< Draw square pixels into a spiral FIXME: Without this function, other functions do not work | FIXME: Combine with image not data structure
-
-	mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, image.img_ptr, 0, 0);	///< Put the image to the window FIXME: Image is not visible after few seconds
-	mlx_loop(data.mlx_ptr);	///< Start the MLX loop
-
-	return (0);	///< Exit status
+int	close_window(int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_Escape) {
+		printf("Keycode:%d  Esc was clicked\n\n", keysym);
+		mlx_destroy_window(data->mlx_ptr, data->window.win_ptr);    /// Destroy window
+		exit(1);
+	}
+	printf("Keycode:%d   Key was clicked\n", keysym);
+	return (0);
 }
 
+int main(void)
+{
+	t_mlx_data data;	///< Reference to data struct
+
+	data.mlx_ptr = mlx_init();	///< Initiating connection
+
+	data.window.win_ptr = mlx_new_window(data.mlx_ptr, 500, 500, "Win1");	///< Made window
+
+	data.window.next = malloc(sizeof(struct s_window));	///< Allocating memory for next window
+	if (data.window.next)	///< Check if was made
+	{
+		data.window.next->win_ptr = mlx_new_window(data.mlx_ptr, 200, 200, "Win2");	///< Made window
+		data.window.next->next = NULL;	///< Set next window as NULL to signal end
+	}
+
+	mlx_key_hook(data.window.win_ptr, close_window, &data);
+
+	mlx_loop(data.mlx_ptr);	///< Start the loop to keep the window(s) open
+
+	mlx_destroy_window(data.mlx_ptr, data.window.next->win_ptr);	/// Destroy window
+	free(data.window.next);
+	mlx_destroy_display(data.mlx_ptr);	/// Destroy connection
+
+	return (0);
+}
