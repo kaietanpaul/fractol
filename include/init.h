@@ -41,7 +41,7 @@
 //void	square_full(void *, void *);	///< Draw a filled square
 //void	square_outline(void *, void *);	///< Draw a square outline
 //void	spiral_squary(void *, void *);	///< Draw square pixels into a spiral
-//void	make_line(void *mlx_ptr, void *win_ptr, int line_len, int x, int y, int direction, int color);	///< Draw a line
+void	make_line(void *mlx_ptr, void *win_ptr, int line_len, int x, int y, int direction, int color);	///< Draw a line
 //
 //	/// TODO Additional learning functions
 //void	spiral(void *, void *);	/// TODO: Spiraling pixels outwards/inwards

@@ -1,4 +1,4 @@
-#include "../include/init.h"
+#include "../../include/init.h"
 
 void	square_full(void *mlx_ptr, void *win_ptr)
 {

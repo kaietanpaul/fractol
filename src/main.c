@@ -24,24 +24,99 @@
 //    return 0;
 //}
 
+typedef struct	s_image_data
+{
+	void	*img_ptr;        ///< Pointer to the image object
+	char	*pixel_start;     ///< Pointer to the first pixel (start of pixel data)
+	int		bits_per_pixel;    ///< Number of bits used for each pixel
+	int		line_size;         ///< Size in bytes of one row of the image
+	int		pixel_order;       ///< Endianness of pixel data, 0 for little endian, 1 for big endian
+}						t_image_data;
+
 typedef struct s_mlx_data	///< Contain basic pointer for the program
 {
-	void	*mlx_ptr;
-	struct	s_window		///< Contains pointers for the window and it's successors
-	{
-		void			*win_ptr;
-		struct s_window	*next;
-	}							window;
-}								t_mlx_data;
+	void	*mlx_ptr;	///< Pointer to mlx connection
+	void	*win_ptr;	///< Pointer to a window
+	int		color;
+	int		direction;
+	int		size;	///< Both x and y sizes
+	t_image_data img;	///< s_image_data struct
+}						t_mlx_data;
 
-int	close_window(int keysym, t_mlx_data *data)
+void my_mlx_pixel_put(const t_image_data *img_data, const int x, const int y, const int color)
 {
-	if (keysym == XK_Escape) {
+	int pixel_location;
+
+	pixel_location = y * img_data->line_size + x * (img_data->bits_per_pixel / 8);
+	*((unsigned int *) (pixel_location + img_data->pixel_start)) = color;
+}
+
+void	screen_color(t_mlx_data *data, const int color)
+{
+	int	x = 0;
+	int	y = 0;
+	data->color = color;
+	while (y < data->size)
+	{
+		while (x < data->size)
+		{
+			my_mlx_pixel_put(&data->img, x, y, color);
+			x++;
+		}
+		x = 0;
+		y++;
+	}
+}
+int	key_event(const int keysym, t_mlx_data *data)
+{
+	if (keysym == XK_Escape)	///< Clear and Exit the window
+	{
 		printf("Keycode:%d  Esc was clicked\n\n", keysym);
-		mlx_destroy_window(data->mlx_ptr, data->window.win_ptr);    /// Destroy window
+		mlx_destroy_image(data->mlx_ptr, data->img.img_ptr);	///< Destroy image
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);	///< Destroy window
+		mlx_destroy_display(data->mlx_ptr);	/// Destroy connection
+		free(data->mlx_ptr);
 		exit(1);
 	}
-	printf("Keycode:%d   Key was clicked\n", keysym);
+	if (keysym == XK_space)	///< Draw a line of different color each time with different direction
+	{
+		data->direction++;
+		if (data->direction == 4)
+			data->direction = 0;
+		printf("Keycode:%d\nSpace was clicked\n\n", keysym);
+		if (data->color == 0xFF69B4)
+			data->color = 0x98FF98;
+		else if (data->color == 0x98FF98)
+			data->color = 0x8A2BE2;
+		else
+			data->color = 0xFF69B4;
+		make_line(data->mlx_ptr, data->win_ptr, 100, 250, 250, data->direction, data->color);	///< Made line
+	}
+	else if (keysym == XK_BackSpace)	///< Clear window on backspace
+	{
+		mlx_destroy_image(data->mlx_ptr, data->img.img_ptr);
+		data->img.img_ptr = mlx_new_image(data->mlx_ptr, data->size, data->size);
+		printf("Keycode:%d\nBackspace was clicked\n\n", keysym);
+	}
+	else if (keysym == XK_r)	///< Change background color
+	{
+		screen_color(data, 0xFFFF0000);
+		printf("Keycode:%d\nR was clicked\n\n", keysym);
+
+	}
+	else if (keysym == XK_g)
+	{
+		screen_color(data, 0xFF00FF00);
+		printf("Keycode:%d\nG was clicked\n\n", keysym);
+	}
+	else if (keysym == XK_b)
+	{
+		screen_color(data, 0xFF0000FF);
+		printf("Keycode:%d\nB was clicked\n\n", keysym);
+	}
+	else
+		printf("Keycode:%d\nKey was clicked\n\n", keysym);
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img_ptr, 0, 0);
 	return (0);
 }
 
@@ -49,24 +124,17 @@ int main(void)
 {
 	t_mlx_data data;	///< Reference to data struct
 
+	data.color = 0xFF69B4;
+	data.direction = 0;
+	data.size = 600;
+
 	data.mlx_ptr = mlx_init();	///< Initiating connection
+	data.win_ptr = mlx_new_window(data.mlx_ptr, data.size, data.size, "Win1");	///< Made window
+	data.img.img_ptr = mlx_new_image(data.mlx_ptr, data.size, data.size);	///< Make new image
+	data.img.pixel_start = mlx_get_data_addr(data.img.img_ptr, &data.img.bits_per_pixel, &data.img.line_size, &data.img.pixel_order);
 
-	data.window.win_ptr = mlx_new_window(data.mlx_ptr, 500, 500, "Win1");	///< Made window
-
-	data.window.next = malloc(sizeof(struct s_window));	///< Allocating memory for next window
-	if (data.window.next)	///< Check if was made
-	{
-		data.window.next->win_ptr = mlx_new_window(data.mlx_ptr, 200, 200, "Win2");	///< Made window
-		data.window.next->next = NULL;	///< Set next window as NULL to signal end
-	}
-
-	mlx_key_hook(data.window.win_ptr, close_window, &data);
-
+	mlx_key_hook(data.win_ptr, key_event, &data);	///< Keep waiting for an event then run @fn
 	mlx_loop(data.mlx_ptr);	///< Start the loop to keep the window(s) open
-
-	mlx_destroy_window(data.mlx_ptr, data.window.next->win_ptr);	/// Destroy window
-	free(data.window.next);
-	mlx_destroy_display(data.mlx_ptr);	/// Destroy connection
 
 	return (0);
 }
