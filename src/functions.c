@@ -1,21 +1,21 @@
 #include "../include/init.h"
 
-void my_mlx_pixel_put(const t_image_data *img_data, const int x, const int y, const int color)
+void	my_mlx_pixel_put(t_image_data *img, int x, int y, int color)
 {
 	int pixel_location;
 
-	pixel_location = y * img_data->line_size + x * (img_data->bits_per_pixel / 8);
-	*((unsigned int *) (pixel_location + img_data->pixel_start)) = color;
+	pixel_location = y * img->line_size + x * (img->bits_per_pixel / 8);
+	*((unsigned int *) (pixel_location + img->pixel_start)) = color;
 }
 
 void	screen_color(t_mlx_data *data, const int color)
 {
 	int	x = 0;
 	int	y = 0;
-	data->win.color = color;
-	while (y < data->win.height)
+	data->color = color;
+	while (y < data->size)
 	{
-		while (x < data->win.width)
+		while (x < data->size)
 		{
 			my_mlx_pixel_put(&data->img, x, y, color);
 			x++;
@@ -36,24 +36,10 @@ int	key_event(const int keysym, t_mlx_data *data)
 		free(data->mlx_ptr);
 		exit(1);
 	}
-	if (keysym == XK_space)	///< Draw a line of different color each time with different direction
-	{
-		data->win.direction++;
-		if (data->win.direction == 4)
-			data->win.direction = 0;
-		printf("Keycode:%d\nSpace was clicked\n\n", keysym);
-		if (data->win.color == 0xFF69B4)
-			data->win.color = 0x98FF98;
-		else if (data->win.color == 0x98FF98)
-			data->win.color = 0x8A2BE2;
-		else
-			data->win.color = 0xFF69B4;
-		make_line(data->mlx_ptr, data->win_ptr, 100, 250, 250, data->win.direction, data->win.color);	///< Made line
-	}
-	else if (keysym == XK_BackSpace)	///< Clear window on backspace
+	if (keysym == XK_BackSpace)	///< Clear window on backspace
 	{
 		mlx_destroy_image(data->mlx_ptr, data->img.img_ptr);
-		data->img.img_ptr = mlx_new_image(data->mlx_ptr, data->win.width, data->win.height);
+		data->img.img_ptr = mlx_new_image(data->mlx_ptr, data->size, data->size);
 		printf("Keycode:%d\nBackspace was clicked\n\n", keysym);
 	}
 	else if (keysym == XK_r)	///< Change background color
