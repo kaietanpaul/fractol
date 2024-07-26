@@ -3,66 +3,53 @@
 
 # include "../minilibx-linux/mlx.h"	///< MLX library
 # include <math.h>	///< Will use it for mathematical functions
-
 # include <X11/keysym.h>	///< Key code library
 
 # include <stdio.h>	///< Will use it for bugs search
 # include <unistd.h>	///< Will use it for bugs search
 # include <stdlib.h>	///< Will use it for free function and valgrind check
-//
-//	/// Structures
-//typedef struct s_data
-//{
-//	void	*mlx_ptr;	///< MLX instance ptr
-//	void	*win_ptr;	///< Window instance ptr
-//}	t_data;
-//
-//typedef struct s_image
-//{
-//	void	*img_ptr;	///< Image instance ptr
-//	char	*addr;	///< Address of the image
-//	int		bits_per_pixel;	///< Bits per pixel
-//	int		size_line;	///< Size of the line
-//	int		endian;	///< Endian
-//}	t_image;
-//
-//
-//	/// Main functions
-//t_data	*init_mlx(void);	///< Initialize the MLX library
-//
-//	/// TODO Additional functions
-//void	*init_image(void *mlx_ptr, int width, int height);	///< Initialize an image
-//void	*get_data_addr(void *img_ptr, int *bits_per_pixel, int *size_line, int *endian);	///< Get data address
-//int		put_image_to_window(void *mlx_ptr, void *win_ptr, void *img_ptr, int x, int y);	///< Put an image to the window
-//int		get_color_value(void *mlx_ptr, int color);	///< Get color value
-//
-//
-//	/// Learning functions
-//void	square_full(void *, void *);	///< Draw a filled square
-//void	square_outline(void *, void *);	///< Draw a square outline
-//void	spiral_squary(void *, void *);	///< Draw square pixels into a spiral
-void	make_line(void *mlx_ptr, void *win_ptr, int line_len, int x, int y, int direction, int color);	///< Draw a line
-//
-//	/// TODO Additional learning functions
-//void	spiral(void *, void *);	/// TODO: Spiraling pixels outwards/inwards
-//void	square_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full square, pixels grow from xy both up and right
-//void	circle_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Circle outline, pixels grow from xy both up and right
-//void	circle_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full circle, pixels grow from xy both up and right
-//void	triangle_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Triangle outline, pixels grow from xy both up and right
-//void	triangle_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full triangle, pixels grow from xy both up and right
-//void	rectangle_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Rectangle outline, pixels grow from xy both up and right
-//void	rectangle_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full rectangle, pixels grow from xy both up and right
-//void	ellipse_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Ellipse outline, pixels grow from xy both up and right
-//void	ellipse_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full ellipse, pixels grow from xy both up and right
-//void	polygon_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Polygon outline, pixels grow from xy both up and right
-//void	polygon_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full polygon, pixels grow from xy both up and right
-//void	star_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Star outline, pixels grow from xy both up and right
-//void	star_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full star, pixels grow from xy both up and right
-//void	heart_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Heart outline, pixels grow from xy both up and right
-//void	heart_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full heart, pixels grow from xy both up and right
-//void	arrow_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Arrow outline, pixels grow from xy both up and right
-//void	arrow_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full arrow, pixels grow from xy both up and right
-//void	cloud_outline(void *mlx_ptr, void *win_ptr);	/// TODO: Cloud outline, pixels grow from xy both up and right
-//void	cloud_fill(void *mlx_ptr, void *win_ptr);	/// TODO: Full cloud, pixels grow from xy both up and right
+
+	/// Structures
+typedef struct	s_image_data
+{
+	void	*img_ptr;        ///< Pointer to the image object
+	char	*pixel_start;     ///< Pointer to the first pixel (start of pixel data)
+	int		bits_per_pixel;    ///< Number of bits used for each pixel
+	int		line_size;         ///< Size in bytes of one row of the image
+	int		pixel_order;       ///< Endianness of pixel data, 0 for little endian, 1 for big endian
+}						t_image_data;
+
+typedef struct s_window_data
+{
+	char	*title;
+	int		width;
+	int		height;
+	int		color;
+	int		direction;
+	int		line_len;
+}						t_window_data;
+
+typedef struct s_mlx_data	///< Contain basic pointer for the program
+{
+	void	*mlx_ptr;	///< Pointer to mlx connection
+	void	*win_ptr;	///< Pointer to a window
+	t_image_data	img;	///< s_image_data struct
+	t_window_data	win;	///< s_window_data struct
+}						t_mlx_data;
+
+
+	/// Main functions
+t_mlx_data	*init_mlx_and_window();	///< Initialize the MLX library
+
+	/// TODO Additional functions
+void		my_mlx_pixel_put(t_image_data *img_data, int x, int y, int color);
+
+int			key_event(int keysym, t_mlx_data *data);
+
+	/// Learning functions
+
+void		make_line(t_mlx_data *data, t_image_data *img, t_window_data *win);
+
+
 
 #endif

@@ -38,38 +38,38 @@ void	square_outline(void *mlx_ptr, void *win_ptr)
 		i++;
 	}
 }
-
-void	make_line(void *mlx_ptr, void *win_ptr, int line_len, int x, int y, int direction, int color)
+// *mlx_ptr, *win_ptr, line_len, x, y, direction, color)
+void	make_line(t_mlx_data *data, t_image_data *img, t_window_data *win)
 {
 	int i = 0;
 
-	if (direction == 0)	///< Horizontal from left to right
+	if (data->win.direction == 0)	///< Horizontal from left to right
 	{
-		while (i <= line_len)
+		while (i <= data->win.line_len)
 		{
 			mlx_pixel_put(mlx_ptr, win_ptr, x + i, y, color);
 			i++;
 		}
 	}
-	else if (direction == 1)	///< Vertical from top to bottom
+	else if (data->win.direction == 1)	///< Vertical from top to bottom
 	{
-		while (i < line_len)
+		while (i < data->win.line_len)
 		{
 			mlx_pixel_put(mlx_ptr, win_ptr, x, y + i, color);
 			i++;
 		}
 	}
-	else if (direction == 2)	///< Horizontal from right to left
+	else if (data->win.direction == 2)	///< Horizontal from right to left
 	{
-		while (i < line_len)
+		while (i < data->win.line_len)
 		{
 			mlx_pixel_put(mlx_ptr, win_ptr, x - i, y, color);
 			i++;
 		}
 	}
-	else if (direction == 3)	///< Vertical from bottom to top
+	else if (data->win.direction == 3)	///< Vertical from bottom to top
 	{
-		while (i <= line_len)
+		while (i <= data->win.line_len)
 		{
 			mlx_pixel_put(mlx_ptr, win_ptr, x, y - i, color);
 			i++;
