@@ -1,19 +1,20 @@
-#include "../include/init.h"
+#include "../include/fractol.h"
 
+//int main(void)
+//{
+//	printf("\n\n%f\n\n", sqrt(2));
+//	return (0);
+//}
 int main(void)
 {
-	t_mlx_data data;	///< Reference to data struct
+	t_mlx *data = NULL;
 
-	data.color = 0xFF69B4;
-	data.size = 600;
+	data = init_mlx_and_window(data, 500, 500, "Fractol");	///< Init mlx and window
 
-	data.mlx_ptr = mlx_init();	///< Initiating connection
-	data.win_ptr = mlx_new_window(data.mlx_ptr, data.size, data.size, "Win1");	///< Made window
-	data.img.img_ptr = mlx_new_image(data.mlx_ptr, data.size, data.size);	///< Make new image
-	data.img.pixel_start = mlx_get_data_addr(data.img.img_ptr, &data.img.bits_per_pixel, &data.img.line_size, &data.img.pixel_order);
+	init_image(data);	///< Init the image
 
-	mlx_key_hook(data.win_ptr, key_event, &data);	///< Keep waiting for an event then run @fn
-	mlx_loop(data.mlx_ptr);	///< Start the loop to keep the window(s) open
+	mlx_key_hook(data->win_ptr, key_event, data);	///< Key hook the events
+	mlx_loop(data->mlx_ptr);	///< Loop the entire thing
 
 	return (0);
 }
