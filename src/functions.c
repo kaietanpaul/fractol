@@ -46,7 +46,6 @@ int	key_event(int keysym, t_mlx *data)
 	{
 		screen_color(data, (int)0xFFFF0000);
 		printf("R was clicked\n\n");
-
 	}
 	else if (keysym == XK_g)
 	{

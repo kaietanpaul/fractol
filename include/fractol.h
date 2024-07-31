@@ -8,6 +8,12 @@
 # include <unistd.h>
 # include <stdlib.h>
 
+///< Struct for complex numbers
+typedef struct s_complex
+{
+	double	real;
+	double	imag;
+}							t_complex;
 ///< Struct to hold image-related data
 typedef struct s_image
 {
@@ -22,16 +28,19 @@ typedef struct s_mlx
 {
 	void	*mlx_ptr;			///< Pointer to MLX connection
 	void	*win_ptr;			///< Pointer to a window
+	char 	*name;
 	int		width;
 	int 	height;
 	t_image	img;		///< Image data structure
 }							t_mlx;
 
 
-t_mlx		*init_mlx_and_window(t_mlx *data, int x, int y, char *title);
-void		init_image(t_mlx *data);
+t_mlx		*init_mlx_win_img(t_mlx *data, int x, int y, char *title);
+//void		init_image(t_mlx *data); TODO delete?;
 
 int			key_event(int keysym, t_mlx *data);
+double	real_complex(int x, int width, double real_min, double real_max);
+double	imag_complex(int y, int height, double imag_min, double imag_max);
 
 //double		scale(double num, double old_min, double old_max, double new_min, double new_max);
 //int 		square(int num);
