@@ -1,22 +1,16 @@
-#include "../include/init.h"
-
-/**
- * @brief Initialize the MLX library and create a new window.
- *
- * This function initializes the MLX library and creates a new window.
- * It takes a pointer to a pointer of the window address from the main function.
- *
- * @param win_ptr A pointer to a pointer that will hold the address of the new window.
- * @return A pointer to the initialized MLX instance.
- */
-
-void *init_mlx(void **win_ptr)	///< Initialize the MLX and pass pointer to pointer of the window address from main()
+#include "../include/fractol.h"
+t_mlx	*init_mlx_win_img(t_mlx *data, int x, int y, char *title)
 {
-	void	*mlx_ptr;	///< Pointer to mlx
-
-	mlx_ptr = mlx_init();	///< Initialization at the MLX pointer
-	*win_ptr = mlx_new_window(mlx_ptr, 500, 500, "F");	/**< Dereferenced ** to change the actual
-*	window address from main(). Made graphical window based on initialized connection with MLX */
-
-	return (mlx_ptr);	///Return initialized MLX
+	data = malloc(sizeof(t_mlx));
+	data->width = x;
+	data->height = y;
+	data->name = title;
+	data->mlx_ptr = mlx_init();
+	data->win_ptr = mlx_new_window(data->mlx_ptr, x, y, title);
+	data->img.img_ptr = mlx_new_image(data->mlx_ptr, data->width, data->height);
+	data->img.pixel_start = mlx_get_data_addr(data->img.img_ptr,
+			&data->img.bits_per_pixel,
+			&data->img.line_size,
+			&data->img.pixel_order);
+	return (data);
 }
