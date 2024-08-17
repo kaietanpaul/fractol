@@ -31,12 +31,18 @@ typedef struct s_complex
 	double	real;
 	double	imag;
 }							t_complex;
+typedef struct s_minmax
+{
+	double 	real_min;
+	double 	real_max;
+	double 	imag_min;
+	double 	imag_max;
+}							t_minmax;
 t_mlx		*init_mlx_win_img(t_mlx *data, int x, int y, char *title);
-//void		init_image(t_mlx *data); TODO delete?;
 int			key_event(int keysym, t_mlx *data);
 double		scale(double num, double old_min, double old_max, double new_min, double new_max);
-void render_mandelbrot(t_mlx *data, double real_min, double real_max, double imag_min, double imag_max, int max_iter);
-int		mandelbrot(t_complex c, int max_iter);
-double	real_complex(int x, int width, double real_min, double real_max);
-double	imag_complex(int y, int height, double imag_min, double imag_max);
+void 		render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter);
+int			mandelbrot(t_complex c, int max_iter);
+double		real_complex(int x, int width, double real_min, double real_max);
+double		imag_complex(int y, int height, double imag_min, double imag_max);
 #endif
