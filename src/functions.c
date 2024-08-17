@@ -8,35 +8,54 @@ void	my_mlx_pixel_put(t_image *img, int x, int y, int color)
 	*((unsigned int *) (pixel_location + img->pixel_start)) = color;
 }
 
-void render_mandelbrot(t_mlx *data, double real_min, double real_max, double imag_min, double imag_max, int max_iter)
+void render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter)
 {
 	t_complex c;
 	int x, y;
 	int color;
 	int iter;
-	double t;
+
+	// Define the range of the gradient
+	double gradient_start = max_iter * 0.001;  // When to start the gradient
+	double gradient_end = max_iter * 0.045;      // When to end the gradient
+
+	// Define the start and end colors of the gradient
+	int start_color = 0xFF000080;  // Dark blue
+	int end_color = 0xFFFFFFFF;    // White
 
 	for (y = 0; y < data->height; y++)
 	{
 		for (x = 0; x < data->width; x++)
 		{
-			c.real = real_complex(x, data->width, real_min, real_max);
-			c.imag = imag_complex(y, data->height, imag_min, imag_max);
+			c.real = real_complex(x, data->width, minmax.real_min, minmax.real_max);
+			c.imag = imag_complex(y, data->height, minmax.imag_min, minmax.imag_max);
 			iter = mandelbrot(c, max_iter);
 
-			if (iter < max_iter)
+			if (iter == max_iter)
 			{
-				// Normalize the iteration count to a value between 0 and 1
-				t = 1.0 - (double)iter / (double)max_iter; // Reversing the gradient
-
-				// Create a reversed gradient with color depth
-				color = (int)(9 * (1 - t) * t * t * t * 255) << 16 |  // Red component
-						(int)(15 * (1 - t) * (1 - t) * t * t * 255) << 8 |  // Green component
-						(int)(8.5 * (1 - t) * (1 - t) * (1 - t) * t * 255); // Blue component
+				color = 0x00000000;  // Black for points inside the Mandelbrot set
 			}
 			else
 			{
-				color = 0x00000000;  // Black color for points inside the set
+				// Calculate the interpolation factor 't' between 0 and 1
+				double t = (iter - gradient_start) / (gradient_end - gradient_start);
+				if (t < 0) t = 0;
+				if (t > 1) t = 1;
+
+				// Interpolate between start_color and end_color
+				int start_red = (start_color >> 16) & 0xFF;
+				int start_green = (start_color >> 8) & 0xFF;
+				int start_blue = start_color & 0xFF;
+
+				int end_red = (end_color >> 16) & 0xFF;
+				int end_green = (end_color >> 8) & 0xFF;
+				int end_blue = end_color & 0xFF;
+
+				int red = (int)((1 - t) * start_red + t * end_red);
+				int green = (int)((1 - t) * start_green + t * end_green);
+				int blue = (int)((1 - t) * start_blue + t * end_blue);
+
+				color = (red << 16) | (green << 8) | blue;
 			}
 
 			my_mlx_pixel_put(&data->img, x, y, color);
@@ -79,6 +98,23 @@ void	screen_color(t_mlx *data, const int color)
 		y++;
 	}
 }
+
+//int mouse_event(int button, int x, int y, t_mlx *data)
+//{
+//	if (button == SCROLL_UP) // Define SCROLL_UP based on your system
+//	{
+//		printf("up was clicked\n\n");
+////		zoom(&data->bounds, 0.9, x, y, data->width, data->height); // Zoom in
+//	}
+//	else if (button == SCROLL_DOWN) // Define SCROLL_DOWN based on your system
+//	{
+//		printf("down was clicked\n\n");
+////		zoom(&data->bounds, 1.1, x, y, data->width, data->height); // Zoom out
+//	}
+////	render_mandelbrot(data, data->bounds, 1000);
+//	return (0);
+//}
+
 int		key_event(int keysym, t_mlx *data)
 {
 	if (keysym == XK_Escape)	///< Clear and Exit the window
