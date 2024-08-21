@@ -64,7 +64,6 @@ void render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter)
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img_ptr, 0, 0);
 }
 
-
 int		mandelbrot(t_complex c, int max_iter)
 {
 	t_complex z;
@@ -82,6 +81,75 @@ int		mandelbrot(t_complex c, int max_iter)
 	return (iter);
 }
 
+void render_julia(t_mlx *data, t_complex julia_const, t_minmax minmax, int max_iter)
+{
+	t_complex z;
+	int x, y;
+	int color;
+	int iter;
+
+	// Define the range of the gradient
+	double gradient_start = max_iter * 0.001;  // When to start the gradient
+	double gradient_end = max_iter * 0.045;      // When to end the gradient
+
+	// Define the start and end colors of the gradient
+	int start_color = 0xFF000080;  // Dark blue
+	int end_color = 0xFFFFFFFF;    // White
+
+	for (y = 0; y < data->height; y++)
+	{
+		for (x = 0; x < data->width; x++)
+		{
+			z.real = real_complex(x, data->width, minmax.real_min, minmax.real_max);
+			z.imag = imag_complex(y, data->height, minmax.imag_min, minmax.imag_max);
+			iter = julia(z, julia_const, max_iter);
+
+			if (iter == max_iter)
+			{
+				color = 0x00000000;  // Black for points inside the Julia set
+			}
+			else
+			{
+				// Calculate the interpolation factor 't' between 0 and 1
+				double t = (iter - gradient_start) / (gradient_end - gradient_start);
+				if (t < 0) t = 0;
+				if (t > 1) t = 1;
+
+				// Interpolate between start_color and end_color
+				int start_red = (start_color >> 16) & 0xFF;
+				int start_green = (start_color >> 8) & 0xFF;
+				int start_blue = start_color & 0xFF;
+
+				int end_red = (end_color >> 16) & 0xFF;
+				int end_green = (end_color >> 8) & 0xFF;
+				int end_blue = end_color & 0xFF;
+
+				int red = (int)((1 - t) * start_red + t * end_red);
+				int green = (int)((1 - t) * start_green + t * end_green);
+				int blue = (int)((1 - t) * start_blue + t * end_blue);
+
+				color = (red << 16) | (green << 8) | blue;
+			}
+
+			my_mlx_pixel_put(&data->img, x, y, color);
+		}
+	}
+	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img_ptr, 0, 0);
+}
+
+int julia(t_complex z, t_complex julia_const, int max_iter)
+{
+	int iter = 0;
+
+	while (z.real * z.real + z.imag * z.imag <= 4 && iter < max_iter)
+	{
+		double temp_real = z.real * z.real - z.imag * z.imag + julia_const.real;
+		z.imag = 2 * z.real * z.imag + julia_const.imag;
+		z.real = temp_real;
+		iter++;
+	}
+	return iter;
+}
 
 void	screen_color(t_mlx *data, const int color)
 {
@@ -98,22 +166,6 @@ void	screen_color(t_mlx *data, const int color)
 		y++;
 	}
 }
-
-//int mouse_event(int button, int x, int y, t_mlx *data)
-//{
-//	if (button == SCROLL_UP) // Define SCROLL_UP based on your system
-//	{
-//		printf("up was clicked\n\n");
-////		zoom(&data->bounds, 0.9, x, y, data->width, data->height); // Zoom in
-//	}
-//	else if (button == SCROLL_DOWN) // Define SCROLL_DOWN based on your system
-//	{
-//		printf("down was clicked\n\n");
-////		zoom(&data->bounds, 1.1, x, y, data->width, data->height); // Zoom out
-//	}
-////	render_mandelbrot(data, data->bounds, 1000);
-//	return (0);
-//}
 
 int		key_event(int keysym, t_mlx *data)
 {
@@ -152,5 +204,48 @@ int		key_event(int keysym, t_mlx *data)
 	else
 		printf("Keycode:%d\nKey was clicked\n\n", keysym);
 	mlx_put_image_to_window(data->mlx_ptr, data->win_ptr, data->img.img_ptr, 0, 0);
+	return (0);
+}
+
+int mouse_event(int button, int x, int y, t_mlx *data)
+{
+	printf("Mouse event: button=%d, x=%d, y=%d\n", button, x, y);
+	double zoom_factor = 1.1;
+	t_minmax *minmax = &data->minmax;
+	double real_range = (minmax->real_max - minmax->real_min) / 2.0;
+	double imag_range = (minmax->imag_max - minmax->imag_min) / 2.0;
+	double real_center = minmax->real_min + real_range;
+	double imag_center = minmax->imag_min + imag_range;
+
+	if (button == 4)  // Scroll up (zoom in)
+	{
+		zoom_factor = 1.0 / zoom_factor;
+	}
+	else if (button == 5)  // Scroll down (zoom out)
+	{
+		// No need to change zoom_factor, it's 1.1 by default for zoom out
+	}
+	else
+	{
+		return (0);  // If it's not scroll up or down, do nothing
+	}
+
+	double real_mouse = real_complex(x, data->width, minmax->real_min, minmax->real_max);
+	double imag_mouse = imag_complex(y, data->height, minmax->imag_min, minmax->imag_max);
+
+	minmax->real_min = real_mouse + (minmax->real_min - real_mouse) * zoom_factor;
+	minmax->real_max = real_mouse + (minmax->real_max - real_mouse) * zoom_factor;
+	minmax->imag_min = imag_mouse + (minmax->imag_min - imag_mouse) * zoom_factor;
+	minmax->imag_max = imag_mouse + (minmax->imag_max - imag_mouse) * zoom_factor;
+
+	// if (strcmp(data->name, "Mandelbrot") == 0)
+	// {
+	render_mandelbrot(data, *minmax, 10);
+	// }
+	// else if (strcmp(data->name, "Julia") == 0)
+	// {
+	// 	render_julia(data, data->julia_const, *minmax, 500);
+	// }
+
 	return (0);
 }
