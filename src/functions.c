@@ -84,7 +84,8 @@ int		mandelbrot(t_complex c, int max_iter)
 void render_julia(t_mlx *data, t_complex julia_const, t_minmax minmax, int max_iter)
 {
 	t_complex z;
-	int x, y;
+	int x = 0;
+	int	y = 0;
 	int color;
 	int iter;
 
@@ -238,14 +239,10 @@ int mouse_event(int button, int x, int y, t_mlx *data)
 	minmax->imag_min = imag_mouse + (minmax->imag_min - imag_mouse) * zoom_factor;
 	minmax->imag_max = imag_mouse + (minmax->imag_max - imag_mouse) * zoom_factor;
 
-	// if (strcmp(data->name, "Mandelbrot") == 0)
-	// {
-	render_mandelbrot(data, *minmax, 10);
-	// }
-	// else if (strcmp(data->name, "Julia") == 0)
-	// {
-	// 	render_julia(data, data->julia_const, *minmax, 500);
-	// }
+	if (strcmp(data->name, "Mandelbrot") == 0)
+		render_mandelbrot(data, *minmax, 100);
+	else if (strcmp(data->name, "Julia") == 0)
+		render_julia(data, data->julia_const, *minmax, 100);
 
 	return (0);
 }

@@ -10,11 +10,13 @@ int main(int argc, char **argv)
 
 	if (argc > 1 && strcmp(argv[1], "julia") == 0)
 	{
-		render_julia(data, julia_const, minmax, 500);
+		data->name = "Julia";
+		render_julia(data, julia_const, minmax, 100);
 	}
 	else
 	{
-		render_mandelbrot(data, minmax, 10);
+		data->name = "Mandelbrot";
+		render_mandelbrot(data, minmax, 100);
 	}
 
 	mlx_key_hook(data->win_ptr, key_event, data);  ///< Key hook the events
