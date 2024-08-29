@@ -224,7 +224,7 @@ int mouse_event(int button, int x, int y, t_mlx *data)
 	}
 	else if (button == 5)  // Scroll down (zoom out)
 	{
-		// No need to change zoom_factor, it's 1.1 by default for zoom out
+		zoom_factor = 1.1;
 	}
 	else
 	{
@@ -240,9 +240,8 @@ int mouse_event(int button, int x, int y, t_mlx *data)
 	minmax->imag_max = imag_mouse + (minmax->imag_max - imag_mouse) * zoom_factor;
 
 	if (strcmp(data->name, "Mandelbrot") == 0)
-		render_mandelbrot(data, *minmax, 100);
+		render_mandelbrot(data, *minmax, 1000);
 	else if (strcmp(data->name, "Julia") == 0)
-		render_julia(data, data->julia_const, *minmax, 100);
-
+		render_julia(data, data->julia_const, *minmax, 1000);
 	return (0);
 }
