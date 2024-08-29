@@ -7,6 +7,24 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
+typedef struct s_detail
+{
+	int		max_iter;
+	int		start_color;
+	int		end_color;
+	int		red;
+	int		green;
+	int		blue;
+	int		start_red;
+	int		start_green;
+	int		start_blue;
+	int		end_red;
+	int		end_green;
+	int		end_blue;
+	double	grad_start;
+	double	grad_end;
+	double	t;
+}							t_detail;
 /// Struct to hold complex values
 typedef struct s_complex
 {
@@ -24,7 +42,7 @@ typedef struct s_minmax
 ///< Struct to hold image-related data
 typedef struct s_image
 {
-	void	*img_ptr;			///< Pointer to the image object
+	void	*img;			///< Pointer to the image object
 	char	*pixel_start;		///< Pointer to the first pixel (start of pixel data)
 	int		bits_per_pixel;		///< Number of bits used for each pixel
 	int		line_size;			///< Size in bytes of one row of the image
@@ -33,14 +51,15 @@ typedef struct s_image
 ///< Struct to hold overall program data
 typedef struct s_mlx
 {
-	void    *mlx_ptr;           ///< Pointer to MLX connection
-	void    *win_ptr;           ///< Pointer to a window
+	void    *mlx;           ///< Pointer to MLX connection
+	void    *win;           ///< Pointer to a window
 	char    *name;
 	int     width;
 	int     height;
 	t_image img;                ///< Image data structure
 	t_minmax minmax;            ///< Min/Max boundaries for fractal
-	t_complex julia_const;      ///< Julia constant for the Julia set
+	t_complex comp;	      ///< Julia constant for the Julia set
+	t_detail detail;			///< Details
 }                           t_mlx;
 
 t_mlx		*init_mlx_win_img(t_mlx *data, int x, int y, char *title);
@@ -51,6 +70,7 @@ void 		render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter);
 int			mandelbrot(t_complex c, int max_iter);
 void		render_julia(t_mlx *data, t_complex julia_const, t_minmax minmax, int max_iter);
 int			julia(t_complex z, t_complex julia_const, int max_iter);
-double		real_complex(int x, int width, double real_min, double real_max);
-double		imag_complex(int y, int height, double imag_min, double imag_max);
+double		r_comp(int x, int width, double real_min, double real_max);
+double		i_comp(int y, int height, double imag_min, double imag_max);
+int			color_gradient(t_detail detail,int iter);
 #endif
