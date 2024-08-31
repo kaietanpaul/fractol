@@ -4,7 +4,7 @@ CC = gcc
 MLX = -Lminilibx-linux -Lmlx -lmlx -Imlx -lXext -lX11 -lm -lz
 
 
-SRCS = src/main.c src/init.c src/math.c src/functions.c src/color.c src/render.c
+SRCS = src/main.c src/init.c src/math.c src/events.c src/color.c src/render.c
 OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)

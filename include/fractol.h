@@ -65,7 +65,7 @@ typedef struct s_mlx
 t_mlx		*init_mlx_win_img(t_mlx *data, int x, int y, char *title);
 int			key_event(int keysym, t_mlx *data);
 int			mouse_event(int button, int x, int y, t_mlx *data);
-double		scale(double num, double old_min, double old_max, double new_min, double new_max);
+double		scale(double num, double old_max, double new_min, double new_max);
 void 		render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter);
 int			mandelbrot(t_complex c, int max_iter);
 void		render_julia(t_mlx *data, t_complex julia_const, t_minmax minmax, int max_iter);
