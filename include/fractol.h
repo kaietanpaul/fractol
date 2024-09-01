@@ -3,14 +3,11 @@
 # include "../minilibx-linux/mlx.h"
 # include <math.h>
 # include <X11/keysym.h>
-# include <stdio.h>
-# include <unistd.h>
 # include <stdlib.h>
-# include <string.h>
+
 typedef struct s_detail
 {
 	int		max_iter;
-	int		start_color;
 	int		end_color;
 	int		red;
 	int		green;
@@ -24,6 +21,7 @@ typedef struct s_detail
 	double	grad_start;
 	double	grad_end;
 	double	t;
+	double	scaled_iter;
 }							t_detail;
 /// Struct to hold complex values
 typedef struct s_complex
@@ -63,14 +61,22 @@ typedef struct s_mlx
 }                           t_mlx;
 
 t_mlx		*init_mlx_win_img(t_mlx *data, int x, int y, char *title);
+
 int			key_event(int keysym, t_mlx *data);
 int			mouse_event(int button, int x, int y, t_mlx *data);
-double		scale(double num, double old_max, double new_min, double new_max);
+
 void 		render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter);
 int			mandelbrot(t_complex c, int max_iter);
 void		render_julia(t_mlx *data, t_complex julia_const, t_minmax minmax, int max_iter);
 int			julia(t_complex z, t_complex julia_const, int max_iter);
+int			color_gradient(t_detail detail,int iter, int max_iter, int start_color);
+
+double		scale(double num, double old_max, double new_min, double new_max);
 double		r_comp(int x, int width, double real_min, double real_max);
 double		i_comp(int y, int height, double imag_min, double imag_max);
-int			color_gradient(t_detail detail,int iter);
+
+int			my_strcmp(char *s1, char *s2);
+int			is_float(char *str);
+double		my_atof(char *str);
+
 #endif
