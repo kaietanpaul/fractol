@@ -42,9 +42,9 @@ int	mouse_event(int button, int x, int y, t_mlx *data)
 	minmax->real_max = r_mouse + (minmax->real_max - r_mouse) * zoom_factor;
 	minmax->imag_min = i_mouse + (minmax->imag_min - i_mouse) * zoom_factor;
 	minmax->imag_max = i_mouse + (minmax->imag_max - i_mouse) * zoom_factor;
-	if (strcmp(data->name, "Mandelbrot") == 0)
+	if (my_strcmp(data->name, "Mandelbrot") == 0)
 		render_mandelbrot(data, *minmax, 500);
-	else if (strcmp(data->name, "Julia") == 0)
-		render_julia(data, data->comp, *minmax, 500);
+	else if (my_strcmp(data->name, "Julia") == 0)
+		render_julia(data, data->comp, *minmax, 2000);
 	return (0);
 }
