@@ -28,7 +28,7 @@ void	render_mandelbrot(t_mlx *data, t_minmax minmax, int max_iter)
 			if (iter == max_iter)
 				color = 0xFFFF00;
 			else
-				color = color_gradient(data->detail, iter, max_iter, 0xFF000080);
+				color = color_gradient(data->detail, iter, max_iter, 0x000080);
 			my_mlx_pixel_put(&data->img, x, y, color);
 			x++;
 		}
@@ -76,7 +76,7 @@ void	render_julia(t_mlx *data, t_complex comp, t_minmax minmax, int max_iter)
 			if (iter == max_iter)
 				color = 0xFFFF00;
 			else
-				color = color_gradient(data->detail, iter, max_iter, 0xFF000080);
+				color = color_gradient(data->detail, iter, max_iter, 0x000080);
 			my_mlx_pixel_put(&data->img, x, y, color);
 			x++;
 		}
