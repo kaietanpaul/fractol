@@ -46,4 +46,4 @@ int	main(int argc, char **argv)
 ///< TODO: add my printf								<-- DONE
 ///< TODO: delete all forbidden libraries and functions	<-- DONE
 ///< TODO: close on x button							<-- DONE
-///< TODO: norminette all files
+///< TODO: norminette all files							<-- DONE

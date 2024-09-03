@@ -17,7 +17,7 @@
 # include <X11/keysym.h>
 # include <stdlib.h>
 # include <stdio.h>
-
+///< stdio is for perror | stdlib for NULL, malloc, free, exit.
 typedef struct s_atof
 {
 	double	result;
